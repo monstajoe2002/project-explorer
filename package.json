@@ -14,7 +14,7 @@
   "contributes": {
     "commands": [
       {
-        "command": "project-explorer.hello",
+        "command": "project-explorer.nextjs.search",
         "title": "Hello"
       }
     ]
