@@ -21,14 +21,22 @@ class SearchFileCommand implements Command {
   }
 }
 export function activate(_: vscode.ExtensionContext) {
-  console.log(
-    'Congratulations, your extension "project-explorer" is now active!'
-  );
   const searchCommand: SearchFileCommand = new SearchFileCommand(
     "project-explorer.nextjs.search"
   );
-  searchCommand.register(_, () => {
-    vscode.window.showInformationMessage("Hello World from Project Explorer!");
+
+  if (!vscode.workspace.workspaceFolders) {
+    vscode.window.showInformationMessage("No workspace folder open");
+    return;
+  }
+  searchCommand.register(_, async () => {
+    const uri = vscode.workspace.workspaceFolders![0].uri;
+    const workspaceName = vscode.workspace.workspaceFolders![0].name;
+    const filesAndFolders = await vscode.workspace.fs.readDirectory(uri);
+    const folders = filesAndFolders.filter(
+      (item) => item[1] === vscode.FileType.Directory
+    );
+    vscode.window.showQuickPick(folders.map((item) => item[0]));
   });
 }
 

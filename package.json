@@ -15,7 +15,7 @@
     "commands": [
       {
         "command": "project-explorer.nextjs.search",
-        "title": "Hello"
+        "title": "Project Explorer: Search Next.js Pages"
       }
     ]
   },
