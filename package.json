@@ -1,7 +1,7 @@
 {
   "name": "project-explorer",
   "displayName": "Project Explorer",
-  "description": "A VS Code extension for searching and creating page and layout files in a web application project. It works with Next.js and SvelteKit",
+  "description": "A VS Code extension for searching and managing page and layout files in a web application project. It works with Next.js and SvelteKit",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.84.0"
