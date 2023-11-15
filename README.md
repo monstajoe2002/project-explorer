@@ -1,6 +1,6 @@
 # project-explorer README
 
-This is the README for your extension "project-explorer". After writing up a brief description, we recommend including the following sections.
+A VS Code extension for searching and creating page and layout files in a web application project.
 
 ## Features
 
@@ -14,18 +14,7 @@ For example if there is an image subfolder under your extension project workspac
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+This extension works in Next.js and SvelteKit projects **only**.
 
 ## Known Issues
 
@@ -33,19 +22,9 @@ Calling out known issues can help limit users opening duplicate issues against y
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.1.0
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+Initial release of Project Explorer
 
 ---
 
