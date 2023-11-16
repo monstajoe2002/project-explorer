@@ -11,6 +11,7 @@ interface Command {
   framework: Framework;
   readonly commandId: CommandId;
   register(context: vscode.ExtensionContext, cb: () => void): void;
+  isValidNextFile: (fileName: string) => boolean;
 }
 class SearchFileCommand implements Command {
   name: CommandName;
@@ -21,17 +22,21 @@ class SearchFileCommand implements Command {
     this.framework = framework;
     this.commandId = `project-explorer.${framework}.${name}`;
   }
+  isValidNextFile = (fileName: string) =>
+    fileName.endsWith(".tsx") || fileName.endsWith(".jsx");
+
   register(context: vscode.ExtensionContext, cb: () => void): void {
     const disposable = vscode.commands.registerCommand(this.commandId, cb);
     context.subscriptions.push(disposable);
   }
 }
-export function activate(_: vscode.ExtensionContext) {
-  const searchCommand: SearchFileCommand = new SearchFileCommand(
-    "nextjs",
-    "search"
-  );
 
+const searchCommand: SearchFileCommand = new SearchFileCommand(
+  "nextjs",
+  "search"
+);
+
+export function activate(_: vscode.ExtensionContext) {
   if (!vscode.workspace.workspaceFolders) {
     vscode.window.showInformationMessage("No workspace folder open");
     return;
@@ -56,15 +61,14 @@ export function activate(_: vscode.ExtensionContext) {
           return;
         }
         const appDirFolders = appDir
-          .filter(
-            ([name, fileType]) =>
-              (fileType === vscode.FileType.Directory &&
-                name.endsWith(".tsx")) ||
-              name.endsWith(".jsx")
-          )
+          .filter(([_, fileType]) => fileType === vscode.FileType.Directory)
           .map(([name]) => name);
         const appDirFiles = appDir
-          .filter(([name, fileType]) => fileType === vscode.FileType.File)
+          .filter(
+            ([name, fileType]) =>
+              fileType === vscode.FileType.File &&
+              searchCommand.isValidNextFile(name)
+          )
           .map(([name]) => name);
         const selected = await vscode.window.showQuickPick([
           ...appDirFiles,
