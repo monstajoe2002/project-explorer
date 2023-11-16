@@ -70,11 +70,18 @@ export function activate(_: vscode.ExtensionContext) {
               searchCommand.isValidNextFile(name)
           )
           .map(([name]) => name);
+        const fileOptions = appDirFiles.map((name) => ({
+          label: "/ (root)",
+          description: name === "page.tsx" ? "Page" : "Layout",
+        }));
+        const folderOptions = appDirFolders.map((name) => ({
+          label: name,
+          description: "Folder",
+        }));
         const selected = await vscode.window.showQuickPick([
-          ...appDirFiles,
-          ...appDirFolders,
+          ...fileOptions,
+          ...folderOptions,
         ]);
-
         break;
 
       default:
