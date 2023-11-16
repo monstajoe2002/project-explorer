@@ -52,8 +52,6 @@ export function activate(_: vscode.ExtensionContext) {
     const { framework } = searchCommand;
     switch (framework) {
       case "nextjs":
-        // TODO: seperate folder options into page and layout options
-
         const APP_DIR_PATH = `${workspacePath}/app`;
         const appDirUri = vscode.Uri.file(APP_DIR_PATH);
         const appDir = await vscode.workspace.fs.readDirectory(appDirUri);
