@@ -43,28 +43,34 @@ export function activate(_: vscode.ExtensionContext) {
     const folders = filesAndFolders.filter(
       (item) => item[1] === vscode.FileType.Directory
     );
-    const doesAppDirExist = filesAndFolders.includes([
-      "app",
-      vscode.FileType.Directory,
-    ]);
+
     const { framework } = searchCommand;
     switch (framework) {
       case "nextjs":
-        // if (!doesAppDirExist) {
-        //   return;
-        // }
-        /*TODO: - fix app dir boolean issue 
-                - seperate folder options into page and layout options
-        */
-        console.log("App dir", doesAppDirExist);
-        const appDirPath = `${workspacePath}/app`;
-        const appDirUri = vscode.Uri.file(appDirPath);
+        // TODO: seperate folder options into page and layout options
+
+        const APP_DIR_PATH = `${workspacePath}/app`;
+        const appDirUri = vscode.Uri.file(APP_DIR_PATH);
         const appDir = await vscode.workspace.fs.readDirectory(appDirUri);
-        const appDirFolders = appDir.filter(
-          ([_, fileType]) => fileType === vscode.FileType.Directory
-        );
-        const appDirFolderNames = appDirFolders.map(([name]) => name);
-        const selected = await vscode.window.showQuickPick(appDirFolderNames);
+        if (!appDir) {
+          return;
+        }
+        const appDirFolders = appDir
+          .filter(
+            ([name, fileType]) =>
+              (fileType === vscode.FileType.Directory &&
+                name.endsWith(".tsx")) ||
+              name.endsWith(".jsx")
+          )
+          .map(([name]) => name);
+        const appDirFiles = appDir
+          .filter(([name, fileType]) => fileType === vscode.FileType.File)
+          .map(([name]) => name);
+        const selected = await vscode.window.showQuickPick([
+          ...appDirFiles,
+          ...appDirFolders,
+        ]);
+
         break;
 
       default:
