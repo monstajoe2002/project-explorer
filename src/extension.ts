@@ -2,19 +2,25 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
+// Custom type definitions
 type Framework = "nextjs" | "sveltekit";
 type CommandName = "search" | "rename" | "create";
+type CommandId = `project-explorer.${Framework}.${CommandName}`;
 interface Command {
-  commandId: `project-explorer.${Framework}.${string}`;
+  name: CommandName;
+  framework: Framework;
+  readonly commandId: CommandId;
   register(context: vscode.ExtensionContext, cb: () => void): void;
 }
 class SearchFileCommand implements Command {
-  commandId: `project-explorer.${Framework}.${CommandName}`;
-  constructor(commandId: `project-explorer.${Framework}.${CommandName}`) {
-    this.commandId = commandId;
+  framework: Framework;
+  commandId: CommandId;
+  constructor(framework: Framework, name: CommandName) {
+    this.name = name;
+    this.framework = framework;
+    this.commandId = `project-explorer.${framework}.${name}`;
   }
+  name: CommandName;
   register(context: vscode.ExtensionContext, cb: () => void): void {
     const disposable = vscode.commands.registerCommand(this.commandId, cb);
     context.subscriptions.push(disposable);
@@ -22,7 +28,8 @@ class SearchFileCommand implements Command {
 }
 export function activate(_: vscode.ExtensionContext) {
   const searchCommand: SearchFileCommand = new SearchFileCommand(
-    "project-explorer.nextjs.search"
+    "nextjs",
+    "search"
   );
 
   if (!vscode.workspace.workspaceFolders) {
