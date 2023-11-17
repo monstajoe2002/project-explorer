@@ -17,10 +17,10 @@ class SearchFileCommand implements Command {
   name: CommandName;
   framework: Framework;
   commandId: CommandId;
-  constructor(framework: Framework, name: CommandName) {
-    this.name = name;
+  constructor(framework: Framework) {
+    this.name = "search";
     this.framework = framework;
-    this.commandId = `project-explorer.${framework}.${name}`;
+    this.commandId = `project-explorer.${framework}.${this.name}`;
   }
   isValidNextFile = (fileName: string) =>
     fileName.endsWith(".tsx") || fileName.endsWith(".jsx");
@@ -33,10 +33,7 @@ class SearchFileCommand implements Command {
 const uri = vscode.workspace.workspaceFolders![0].uri;
 const workspacePath = uri.fsPath;
 
-const searchCommand: SearchFileCommand = new SearchFileCommand(
-  "nextjs",
-  "search"
-);
+const searchCommand: SearchFileCommand = new SearchFileCommand("nextjs");
 
 export function activate(_: vscode.ExtensionContext) {
   if (!vscode.workspace.workspaceFolders) {
@@ -55,7 +52,10 @@ export function activate(_: vscode.ExtensionContext) {
         }
         const appDirFolders = appDir
           .filter(([_, fileType]) => fileType === vscode.FileType.Directory)
-          .map(([name]) => name);
+          .map(([name]) => ({
+            label: `${name}/`,
+            description: "Folder",
+          }));
         const appDirFiles = appDir
           .filter(
             ([name, fileType]) =>
@@ -63,26 +63,26 @@ export function activate(_: vscode.ExtensionContext) {
               searchCommand.isValidNextFile(name)
           )
           .map(([name]) => name);
-        const fileOptions = appDirFiles.map((fileName) => ({
-          fileName,
-          label: "/",
-          description: fileName === "page.tsx" ? "page" : "layout",
-        }));
-        const folderOptions = appDirFolders.map((fileName) => ({
-          fileName,
-          label: fileName,
-          description: "Folder",
-        }));
-        const selected = await vscode.window.showQuickPick([
-          ...fileOptions,
-          ...folderOptions,
-        ]);
-        const selectedPath = APP_DIR_PATH.concat("/", selected?.fileName || "");
-        const selectedUri = vscode.Uri.file(selectedPath);
-        const selectedFile = await vscode.workspace.openTextDocument(
-          selectedUri
-        );
-        await vscode.window.showTextDocument(selectedFile);
+        // const fileOptions = appDirFiles.map((fileName) => ({
+        //   fileName,
+        //   label: "/",
+        //   description: fileName === "page.tsx" ? "page" : "layout",
+        // }));
+        // const folderOptions = appDirFolders.map((fileName) => ({
+        //   fileName,
+        //   label: fileName,
+        //   description: "Folder",
+        // }));
+        // const selected = await vscode.window.showQuickPick([
+        //   ...appDirFiles,
+        //   ...appDirFolders,
+        // ]);
+        // const selectedPath = APP_DIR_PATH.concat("/", selected?.fileName || "");
+        // const selectedUri = vscode.Uri.file(selectedPath);
+        // const selectedFile = await vscode.workspace.openTextDocument(
+        //   selectedUri
+        // );
+        // await vscode.window.showTextDocument(selectedFile);
         break;
 
       default:
