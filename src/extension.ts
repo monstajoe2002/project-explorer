@@ -52,7 +52,9 @@ export function activate(_: vscode.ExtensionContext) {
         }
         const appDirFolders = appDir
           .filter(([_, fileType]) => fileType === vscode.FileType.Directory)
-          .map(([name]) => ({
+          .map(([name, fileType]) => ({
+            name,
+            fileType,
             label: `${name}/`,
             description: "Folder",
           }));
@@ -62,27 +64,60 @@ export function activate(_: vscode.ExtensionContext) {
               fileType === vscode.FileType.File &&
               searchCommand.isValidNextFile(name)
           )
-          .map(([name]) => name);
-        // const fileOptions = appDirFiles.map((fileName) => ({
-        //   fileName,
-        //   label: "/",
-        //   description: fileName === "page.tsx" ? "page" : "layout",
-        // }));
-        // const folderOptions = appDirFolders.map((fileName) => ({
-        //   fileName,
-        //   label: fileName,
-        //   description: "Folder",
-        // }));
-        // const selected = await vscode.window.showQuickPick([
-        //   ...appDirFiles,
-        //   ...appDirFolders,
-        // ]);
-        // const selectedPath = APP_DIR_PATH.concat("/", selected?.fileName || "");
-        // const selectedUri = vscode.Uri.file(selectedPath);
-        // const selectedFile = await vscode.workspace.openTextDocument(
-        //   selectedUri
-        // );
-        // await vscode.window.showTextDocument(selectedFile);
+          .map(([name, fileType]) => ({
+            name,
+            fileType,
+            label: "/",
+            description: name.includes("page") ? "page" : "layout",
+          }));
+        let selected = await vscode.window.showQuickPick([
+          ...appDirFiles,
+          ...appDirFolders,
+        ]);
+        if (!selected) {
+          return;
+        }
+        async function showDirectoryContents(uri: vscode.Uri) {
+          const filesAndFolders = await vscode.workspace.fs.readDirectory(uri);
+          const folders = filesAndFolders
+            .filter(([_, fileType]) => fileType === vscode.FileType.Directory)
+            .map(([name, fileType]) => ({
+              name,
+              fileType,
+              label: `${name}/`,
+              description: "Folder",
+            }));
+          const files = filesAndFolders
+            .filter(
+              ([name, fileType]) =>
+                fileType === vscode.FileType.File &&
+                searchCommand.isValidNextFile(name)
+            )
+            .map(([name, fileType]) => ({
+              name,
+              fileType,
+              label: "/",
+              description: name.includes("page") ? "page" : "layout",
+            }));
+          const selectedItem = await vscode.window.showQuickPick([
+            ...files,
+            ...folders,
+          ]);
+          if (selectedItem) {
+            const selectedUri = vscode.Uri.joinPath(uri, selectedItem.name);
+            if (selectedItem.fileType === vscode.FileType.Directory) {
+              await showDirectoryContents(selectedUri);
+            } else {
+              const selectedFile = await vscode.workspace.openTextDocument(
+                selectedUri
+              );
+              await vscode.window.showTextDocument(selectedFile);
+            }
+          }
+        }
+        const selectedPath = APP_DIR_PATH.concat("/", selected.name);
+        const selectedUri = vscode.Uri.file(selectedPath);
+        showDirectoryContents(selectedUri);
         break;
 
       default:
