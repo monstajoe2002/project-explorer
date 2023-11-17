@@ -30,6 +30,8 @@ class SearchFileCommand implements Command {
     context.subscriptions.push(disposable);
   }
 }
+const uri = vscode.workspace.workspaceFolders![0].uri;
+const workspacePath = uri.fsPath;
 
 const searchCommand: SearchFileCommand = new SearchFileCommand(
   "nextjs",
@@ -42,13 +44,6 @@ export function activate(_: vscode.ExtensionContext) {
     return;
   }
   searchCommand.register(_, async () => {
-    const uri = vscode.workspace.workspaceFolders![0].uri;
-    const workspacePath = uri.fsPath;
-    const filesAndFolders = await vscode.workspace.fs.readDirectory(uri);
-    const folders = filesAndFolders.filter(
-      (item) => item[1] === vscode.FileType.Directory
-    );
-
     const { framework } = searchCommand;
     switch (framework) {
       case "nextjs":
@@ -68,18 +63,26 @@ export function activate(_: vscode.ExtensionContext) {
               searchCommand.isValidNextFile(name)
           )
           .map(([name]) => name);
-        const fileOptions = appDirFiles.map((name) => ({
-          label: "/ (root)",
-          description: name === "page.tsx" ? "Page" : "Layout",
+        const fileOptions = appDirFiles.map((fileName) => ({
+          fileName,
+          label: "/",
+          description: fileName === "page.tsx" ? "page" : "layout",
         }));
-        const folderOptions = appDirFolders.map((name) => ({
-          label: name,
+        const folderOptions = appDirFolders.map((fileName) => ({
+          fileName,
+          label: fileName,
           description: "Folder",
         }));
         const selected = await vscode.window.showQuickPick([
           ...fileOptions,
           ...folderOptions,
         ]);
+        const selectedPath = APP_DIR_PATH.concat("/", selected?.fileName || "");
+        const selectedUri = vscode.Uri.file(selectedPath);
+        const selectedFile = await vscode.workspace.openTextDocument(
+          selectedUri
+        );
+        await vscode.window.showTextDocument(selectedFile);
         break;
 
       default:
