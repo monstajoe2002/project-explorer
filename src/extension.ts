@@ -4,8 +4,11 @@ import * as vscode from "vscode";
 
 // Custom type definition
 type Framework = "nextjs" | "sveltekit";
-type CommandName = "search" | "rename" | "create";
+type CommandName = "search" | "rename" | "create" | "delete";
 type CommandId = `project-explorer.${Framework}.${CommandName}`;
+
+const workspaceUri = vscode.workspace.workspaceFolders![0].uri;
+const appDirUri = vscode.Uri.joinPath(workspaceUri, "app");
 interface Command {
   name: CommandName;
   framework: Framework;
@@ -13,6 +16,8 @@ interface Command {
   register(context: vscode.ExtensionContext, cb: () => void): void;
   isValidNextFile: (fileName: string) => boolean;
   showDirectoryContents(uri: vscode.Uri): Promise<void>;
+  // createPageOrLayout(uri: vscode.Uri, fileName: string): Promise<void>;
+  // deletePageOrLayout(uri: vscode.Uri, fileName: string): Promise<void>;
 }
 class NextJsCommand implements Command {
   name: CommandName;
@@ -65,12 +70,12 @@ class NextJsCommand implements Command {
       }
     }
   }
+  createPage(uri: vscode.Uri, fileName: string) {}
 }
 
 export function activate(_: vscode.ExtensionContext) {
   const nextSearch = new NextJsCommand("search");
-  const workspaceUri = vscode.workspace.workspaceFolders![0].uri;
-  const appDirUri = vscode.Uri.joinPath(workspaceUri, "app");
+  const nextCreate = new NextJsCommand("create");
 
   if (!vscode.workspace.workspaceFolders) {
     vscode.window.showInformationMessage("No workspace folder open");
