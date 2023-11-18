@@ -12,23 +12,7 @@ interface Command {
   readonly commandId: CommandId;
   register(context: vscode.ExtensionContext, cb: () => void): void;
   isValidNextFile: (fileName: string) => boolean;
-}
-class SearchFileCommand implements Command {
-  name: CommandName;
-  framework: Framework;
-  commandId: CommandId;
-  constructor(framework: Framework) {
-    this.name = "search";
-    this.framework = framework;
-    this.commandId = `project-explorer.${framework}.${this.name}`;
-  }
-  isValidNextFile = (fileName: string) =>
-    fileName.endsWith(".tsx") || fileName.endsWith(".jsx");
-
-  register(context: vscode.ExtensionContext, cb: () => void): void {
-    const disposable = vscode.commands.registerCommand(this.commandId, cb);
-    context.subscriptions.push(disposable);
-  }
+  showDirectoryContents(uri: vscode.Uri): Promise<void>;
 }
 class NextJsCommand implements Command {
   name: CommandName;
@@ -46,34 +30,16 @@ class NextJsCommand implements Command {
     const disposable = vscode.commands.registerCommand(this.commandId, cb);
     context.subscriptions.push(disposable);
   }
-}
-const uri = vscode.workspace.workspaceFolders![0].uri;
-const workspacePath = uri.fsPath;
-
-export function activate(_: vscode.ExtensionContext) {
-  const { framework, register, isValidNextFile } = new NextJsCommand("search");
-
-  if (!vscode.workspace.workspaceFolders) {
-    vscode.window.showInformationMessage("No workspace folder open");
-    return;
-  }
-
-  register(_, async () => {
-    const workspaceUri = vscode.workspace.workspaceFolders![0].uri;
-    const appDirUri = vscode.Uri.joinPath(workspaceUri, "app");
-    await showDirectoryContents(appDirUri);
-  });
-
-  async function showDirectoryContents(uri: vscode.Uri) {
+  async showDirectoryContents(uri: vscode.Uri) {
     const filesAndFolders = await vscode.workspace.fs.readDirectory(uri);
     const items = filesAndFolders
       .filter(
         ([name, fileType]) =>
-          isValidNextFile(name) || fileType === vscode.FileType.Directory
+          this.isValidNextFile(name) || fileType === vscode.FileType.Directory
       )
       .map(([name, type]) => ({
         fileName: name,
-        label: isValidNextFile(name) ? "/" : name,
+        label: this.isValidNextFile(name) ? "/" : name,
         isDirectory: type === vscode.FileType.Directory,
         description:
           type === vscode.FileType.Directory
@@ -90,7 +56,7 @@ export function activate(_: vscode.ExtensionContext) {
     if (selectedItem) {
       const selectedUri = vscode.Uri.joinPath(uri, selectedItem.fileName);
       if (selectedItem.isDirectory) {
-        await showDirectoryContents(selectedUri);
+        await this.showDirectoryContents(selectedUri);
       } else {
         const selectedFile = await vscode.workspace.openTextDocument(
           selectedUri
@@ -99,6 +65,21 @@ export function activate(_: vscode.ExtensionContext) {
       }
     }
   }
+}
+
+export function activate(_: vscode.ExtensionContext) {
+  const nextSearch = new NextJsCommand("search");
+  const workspaceUri = vscode.workspace.workspaceFolders![0].uri;
+  const appDirUri = vscode.Uri.joinPath(workspaceUri, "app");
+
+  if (!vscode.workspace.workspaceFolders) {
+    vscode.window.showInformationMessage("No workspace folder open");
+    return;
+  }
+
+  nextSearch.register(_, async () => {
+    await nextSearch.showDirectoryContents(appDirUri);
+  });
 }
 
 // This method is called when your extension is deactivated
