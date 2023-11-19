@@ -49,8 +49,7 @@ class NextJsCommand implements Command {
       `)
       )
     );
-    await vscode.workspace.openTextDocument(pathToFileUri);
-    await vscode.window.showTextDocument(pathToFileUri);
+    await this.openFile(pathToFileUri);
   }
   isValidNextFile = (fileName: string) =>
     fileName.endsWith(".tsx") || fileName.endsWith(".jsx");
@@ -58,6 +57,10 @@ class NextJsCommand implements Command {
   register(context: vscode.ExtensionContext, cb: () => void): void {
     const disposable = vscode.commands.registerCommand(this.commandId, cb);
     context.subscriptions.push(disposable);
+  }
+  private async openFile(uri: vscode.Uri) {
+    const selectedFile = await vscode.workspace.openTextDocument(uri);
+    await vscode.window.showTextDocument(selectedFile);
   }
   async showDirectoryContents(uri: vscode.Uri) {
     const filesAndFolders = await vscode.workspace.fs.readDirectory(uri);
@@ -87,10 +90,7 @@ class NextJsCommand implements Command {
       if (selectedItem.isDirectory) {
         await this.showDirectoryContents(selectedUri);
       } else {
-        const selectedFile = await vscode.workspace.openTextDocument(
-          selectedUri
-        );
-        await vscode.window.showTextDocument(selectedFile);
+        await this.openFile(selectedUri);
       }
     }
   }
