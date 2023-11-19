@@ -15,7 +15,11 @@
     "commands": [
       {
         "command": "project-explorer.nextjs.search",
-        "title": "Project Explorer: Search Next.js Pages"
+        "title": "Project Explorer: Search Next.js Files"
+      },
+      {
+        "command": "project-explorer.nextjs.create",
+        "title": "Project Explorer: Create New Next.js File"
       }
     ]
   },
