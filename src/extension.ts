@@ -17,7 +17,7 @@ interface Command {
   isValidNextFile: (fileName: string) => boolean;
   showDirectoryContents(uri: vscode.Uri): Promise<void>;
   createPageOrLayout(uri: vscode.Uri): Promise<void>;
-  // deletePageOrLayout(uri: vscode.Uri): Promise<void>;
+  deletePageOrLayout(uri: vscode.Uri): Promise<void>;
 }
 class NextJsCommand implements Command {
   name: CommandName;
@@ -27,6 +27,40 @@ class NextJsCommand implements Command {
     this.name = name;
     this.framework = "nextjs";
     this.commandId = `project-explorer.${this.framework}.${name}`;
+  }
+  async deletePageOrLayout(uri: vscode.Uri): Promise<void> {
+    const filesAndFolders = await vscode.workspace.fs.readDirectory(uri);
+    const items = filesAndFolders
+      .filter(
+        ([name, fileType]) =>
+          this.isValidNextFile(name) || fileType === vscode.FileType.Directory
+      )
+      .map(([name, type]) => ({
+        fileName: name,
+        label: this.isValidNextFile(name) ? "/" : name,
+        isDirectory: type === vscode.FileType.Directory,
+        description:
+          type === vscode.FileType.Directory
+            ? "folder"
+            : name.includes("page")
+            ? "page"
+            : "layout",
+      }))
+      .sort((a, b) => (a.label === b.label ? 0 : a.label > b.label ? 1 : -1));
+
+    const selectedItem = await vscode.window.showQuickPick(items, {
+      placeHolder: "Select a file or folder",
+    });
+    if (selectedItem) {
+      const selectedUri = vscode.Uri.joinPath(uri, selectedItem.fileName);
+      if (selectedItem.isDirectory) {
+        await this.deletePageOrLayout(selectedUri);
+      } else {
+        await vscode.workspace.fs.delete(selectedUri, {
+          useTrash: true,
+        });
+      }
+    }
   }
 
   async createPageOrLayout(uri: vscode.Uri): Promise<void> {
@@ -99,7 +133,7 @@ class NextJsCommand implements Command {
 export function activate(_: vscode.ExtensionContext) {
   const nextSearch = new NextJsCommand("search");
   const nextCreate = new NextJsCommand("create");
-
+  const nextDelete = new NextJsCommand("delete");
   if (!vscode.workspace.workspaceFolders) {
     vscode.window.showInformationMessage("No workspace folder open");
     return;
@@ -110,6 +144,9 @@ export function activate(_: vscode.ExtensionContext) {
   });
   nextCreate.register(_, async () => {
     await nextCreate.createPageOrLayout(appDirUri);
+  });
+  nextDelete.register(_, async () => {
+    await nextDelete.deletePageOrLayout(appDirUri);
   });
 }
 

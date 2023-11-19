@@ -20,6 +20,10 @@
       {
         "command": "project-explorer.nextjs.create",
         "title": "Project Explorer: Create New Next.js File"
+      },
+      {
+        "command": "project-explorer.nextjs.delete",
+        "title": "Project Explorer: Delete Next.js File"
       }
     ]
   },
