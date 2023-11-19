@@ -2,7 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 
-// Custom type definition
+// Custom type definitions
 type Framework = "nextjs" | "sveltekit";
 type CommandName = "search" | "rename" | "create" | "delete";
 type CommandId = `project-explorer.${Framework}.${CommandName}`;
@@ -16,8 +16,8 @@ interface Command {
   register(context: vscode.ExtensionContext, cb: () => void): void;
   isValidNextFile: (fileName: string) => boolean;
   showDirectoryContents(uri: vscode.Uri): Promise<void>;
-  // createPageOrLayout(uri: vscode.Uri, fileName: string): Promise<void>;
-  // deletePageOrLayout(uri: vscode.Uri, fileName: string): Promise<void>;
+  createPageOrLayout(uri: vscode.Uri): Promise<void>;
+  // deletePageOrLayout(uri: vscode.Uri): Promise<void>;
 }
 class NextJsCommand implements Command {
   name: CommandName;
@@ -27,6 +27,30 @@ class NextJsCommand implements Command {
     this.name = name;
     this.framework = "nextjs";
     this.commandId = `project-explorer.${this.framework}.${name}`;
+  }
+
+  async createPageOrLayout(uri: vscode.Uri): Promise<void> {
+    const input = await vscode.window.showInputBox({
+      prompt: "Enter the name of the page or layout relative to 'app/'",
+    });
+    if (!input) {
+      vscode.window.showErrorMessage("No file name provided");
+    }
+    const pathToFileUri = vscode.Uri.joinPath(appDirUri, input!);
+    const pathToFile = pathToFileUri.fsPath;
+    const fileName = pathToFile.split("\\").at(-1)!.slice(0, -4);
+    await vscode.workspace.fs.writeFile(
+      pathToFileUri,
+      new Uint8Array(
+        Buffer.from(`
+      export default function ${fileName}() {
+        return <div>${fileName}</div>
+      }
+      `)
+      )
+    );
+    await vscode.workspace.openTextDocument(pathToFileUri);
+    await vscode.window.showTextDocument(pathToFileUri);
   }
   isValidNextFile = (fileName: string) =>
     fileName.endsWith(".tsx") || fileName.endsWith(".jsx");
@@ -70,7 +94,6 @@ class NextJsCommand implements Command {
       }
     }
   }
-  createPage(uri: vscode.Uri, fileName: string) {}
 }
 
 export function activate(_: vscode.ExtensionContext) {
@@ -84,6 +107,9 @@ export function activate(_: vscode.ExtensionContext) {
 
   nextSearch.register(_, async () => {
     await nextSearch.showDirectoryContents(appDirUri);
+  });
+  nextCreate.register(_, async () => {
+    await nextCreate.createPageOrLayout(appDirUri);
   });
 }
 
