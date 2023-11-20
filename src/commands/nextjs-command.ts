@@ -33,16 +33,17 @@ export default class NextJsCommand implements Command {
     const selectedItem = await vscode.window.showQuickPick(items, {
       placeHolder: "Select a file or folder",
     });
-    if (selectedItem) {
-      const selectedUri = vscode.Uri.joinPath(uri, selectedItem.fileName);
-      if (selectedItem.isDirectory) {
-        await this.deletePageOrLayout(selectedUri);
-      } else {
-        await vscode.workspace.fs.delete(selectedUri, {
-          useTrash: true,
-        });
-      }
+    if (!selectedItem) {
+      return;
     }
+    const selectedUri = vscode.Uri.joinPath(uri, selectedItem.fileName);
+    if (!selectedItem.isDirectory) {
+      await vscode.workspace.fs.delete(selectedUri, {
+        useTrash: true,
+      });
+      return;
+    }
+    await this.deletePageOrLayout(selectedUri);
   }
 
   async createPageOrLayout(uri: vscode.Uri): Promise<void> {
