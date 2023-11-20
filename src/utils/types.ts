@@ -1,5 +1,4 @@
 // Custom type definitions
 
-export type Framework = "nextjs" | "sveltekit";
 export type CommandName = "search" | "rename" | "create" | "delete";
-export type CommandId = `project-explorer.${Framework}.${CommandName}`;
+export type CommandId = `next-project-explorer.${CommandName}`;

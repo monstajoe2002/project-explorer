@@ -14,15 +14,15 @@
   "contributes": {
     "commands": [
       {
-        "command": "project-explorer.nextjs.search",
+        "command": "next-project-explorer.search",
         "title": "Project Explorer: Search Next.js Files"
       },
       {
-        "command": "project-explorer.nextjs.create",
-        "title": "Project Explorer: Create New Next.js File"
+        "command": "next-project-explorer.create",
+        "title": "Project Explorer: New Next.js File"
       },
       {
-        "command": "project-explorer.nextjs.delete",
+        "command": "next-project-explorer.delete",
         "title": "Project Explorer: Delete Next.js File"
       }
     ]

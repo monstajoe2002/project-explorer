@@ -1,15 +1,13 @@
 import * as vscode from "vscode";
-import { CommandName, CommandId, Framework } from "../utils/types";
+import { CommandName, CommandId } from "../utils/types";
 import Command from "../utils/command";
 
 export default class NextJsCommand implements Command {
   name: CommandName;
   readonly commandId: CommandId;
-  framework: Framework;
   constructor(name: CommandName) {
     this.name = name;
-    this.framework = "nextjs";
-    this.commandId = `project-explorer.${this.framework}.${name}`;
+    this.commandId = `next-project-explorer.${name}`;
   }
   async deletePageOrLayout(uri: vscode.Uri): Promise<void> {
     // TODO: group option by folder level
