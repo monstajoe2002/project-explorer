@@ -38,11 +38,20 @@ export default class NextJsCommand implements Command {
     }
     const selectedUri = vscode.Uri.joinPath(uri, selectedItem.fileName);
     if (!selectedItem.isDirectory) {
-      await vscode.workspace.fs.delete(selectedUri, {
-        useTrash: true,
-      });
-      return;
+      const option = await vscode.window.showWarningMessage(
+        "Are you sure you want to delete this file?",
+        "Yes",
+        "No"
+      );
+      if (option === "Yes") {
+        await vscode.workspace.fs.delete(selectedUri, {
+          useTrash: true,
+        });
+      } else {
+        return;
+      }
     }
+
     await this.deletePageOrLayout(selectedUri);
   }
 
