@@ -11,24 +11,7 @@ export default class NextJsCommand implements Command {
   }
   async deletePageOrLayout(uri: vscode.Uri): Promise<void> {
     // TODO: group option by folder level
-    const filesAndFolders = await vscode.workspace.fs.readDirectory(uri);
-    const items = filesAndFolders
-      .filter(
-        ([name, fileType]) =>
-          this.isValidNextFile(name) || fileType === vscode.FileType.Directory
-      )
-      .map(([name, type]) => ({
-        fileName: name,
-        label: this.isValidNextFile(name) ? "/" : name,
-        isDirectory: type === vscode.FileType.Directory,
-        description:
-          type === vscode.FileType.Directory
-            ? "folder"
-            : name.includes("page")
-            ? "page"
-            : "layout",
-      }))
-      .sort((a, b) => (a.label === b.label ? 0 : a.label > b.label ? 1 : -1));
+    const items = await this._getQuickPickOptions(uri);
 
     const selectedItem = await vscode.window.showQuickPick(items, {
       placeHolder: "Select a file or folder",
