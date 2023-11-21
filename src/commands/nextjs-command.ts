@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { CommandName, CommandId } from "../utils/types";
+import { CommandName, CommandId, File } from "../utils/types";
 import Command from "../utils/command";
 
 export default class NextJsCommand implements Command {
@@ -89,8 +89,24 @@ export default class NextJsCommand implements Command {
     await vscode.window.showTextDocument(selectedFile);
   }
   async showDirectoryContents(uri: vscode.Uri) {
+    const items: File[] = await this._getQuickPickOptions(uri);
+
+    const selectedItem = await vscode.window.showQuickPick(items, {
+      placeHolder: "Select a file or folder",
+    });
+    if (selectedItem) {
+      const selectedUri = vscode.Uri.joinPath(uri, selectedItem.fileName);
+      if (selectedItem.isDirectory) {
+        await this.showDirectoryContents(selectedUri);
+      } else {
+        await this.openFile(selectedUri);
+      }
+    }
+  }
+
+  async _getQuickPickOptions(uri: vscode.Uri) {
     const filesAndFolders = await vscode.workspace.fs.readDirectory(uri);
-    const items = filesAndFolders
+    const items: File[] = filesAndFolders
       .filter(
         ([name, fileType]) =>
           this.isValidNextFile(name) || fileType === vscode.FileType.Directory
@@ -107,17 +123,6 @@ export default class NextJsCommand implements Command {
             : "layout",
       }))
       .sort((a, b) => (a.label === b.label ? 0 : a.label > b.label ? 1 : -1));
-
-    const selectedItem = await vscode.window.showQuickPick(items, {
-      placeHolder: "Select a file or folder",
-    });
-    if (selectedItem) {
-      const selectedUri = vscode.Uri.joinPath(uri, selectedItem.fileName);
-      if (selectedItem.isDirectory) {
-        await this.showDirectoryContents(selectedUri);
-      } else {
-        await this.openFile(selectedUri);
-      }
-    }
+    return items;
   }
 }
