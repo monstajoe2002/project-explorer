@@ -26,13 +26,12 @@ export default class NextJsCommand implements Command {
         "Yes",
         "No"
       );
-      if (option === "Yes") {
-        await vscode.workspace.fs.delete(selectedUri, {
-          useTrash: true,
-        });
-      } else {
+      if (option === "No") {
         return;
       }
+      await vscode.workspace.fs.delete(selectedUri, {
+        useTrash: true,
+      });
     }
 
     await this.deletePageOrLayout(selectedUri);
@@ -58,7 +57,7 @@ export default class NextJsCommand implements Command {
       `)
       )
     );
-    await this.openFile(pathToFileUri);
+    await this._openFile(pathToFileUri);
   }
   isValidNextFile = (fileName: string) =>
     fileName.endsWith(".tsx") || fileName.endsWith(".jsx");
@@ -67,7 +66,7 @@ export default class NextJsCommand implements Command {
     const disposable = vscode.commands.registerCommand(this.commandId, cb);
     context.subscriptions.push(disposable);
   }
-  private async openFile(uri: vscode.Uri) {
+  async _openFile(uri: vscode.Uri) {
     const selectedFile = await vscode.workspace.openTextDocument(uri);
     await vscode.window.showTextDocument(selectedFile);
   }
@@ -82,7 +81,7 @@ export default class NextJsCommand implements Command {
       if (selectedItem.isDirectory) {
         await this.showDirectoryContents(selectedUri);
       } else {
-        await this.openFile(selectedUri);
+        await this._openFile(selectedUri);
       }
     }
   }
