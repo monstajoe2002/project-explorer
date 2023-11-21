@@ -12,6 +12,27 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "project-explorer",
+          "title": "Project Explorer",
+          "icon": "./src/assets/project-explorer-treeview.svg"
+        }
+      ]
+    },
+    "views": {
+      "project-explorer": [
+        {
+          "id": "projectExplorer.pages",
+          "name": "Pages"
+        },
+        {
+          "id": "projectExplorer.layouts",
+          "name": "Layouts"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "next-project-explorer.search",
