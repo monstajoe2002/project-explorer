@@ -1,6 +1,6 @@
 # Project Explorer README
 
-An extension for searching and creating page and layout files in a Next.js application project.
+A convenient extension for searching and creating page and layout files in a Next.js application project.
 
 ## Features
 

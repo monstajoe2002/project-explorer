@@ -67,8 +67,7 @@ export default class NextJsCommand implements Command {
     context.subscriptions.push(disposable);
   }
   private async _openFile(uri: vscode.Uri) {
-    const selectedFile = await vscode.workspace.openTextDocument(uri);
-    await vscode.window.showTextDocument(selectedFile);
+    await vscode.commands.executeCommand("vscode.open", uri);
   }
   async showDirectoryContents(uri: vscode.Uri) {
     const items: File[] = await this._getQuickPickOptions(uri);
