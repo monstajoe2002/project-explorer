@@ -6,10 +6,17 @@ export default class PagesProvider
   implements vscode.TreeDataProvider<FileTreeItem>
 {
   constructor(private projectDirUri: vscode.Uri) {}
+  private _onDidChangeTreeData: vscode.EventEmitter<
+    void | FileTreeItem | FileTreeItem[] | null | undefined
+  > = new vscode.EventEmitter<
+    void | FileTreeItem | FileTreeItem[] | null | undefined
+  >();
   onDidChangeTreeData?:
     | vscode.Event<void | FileTreeItem | FileTreeItem[] | null | undefined>
-    | undefined;
-
+    | undefined = this._onDidChangeTreeData.event;
+  refresh(): void {
+    this._onDidChangeTreeData?.fire();
+  }
   getTreeItem(
     element: FileTreeItem
   ): vscode.TreeItem | Thenable<vscode.TreeItem> {
@@ -25,7 +32,7 @@ export default class PagesProvider
     }
     let rootDir: vscode.Uri = this.projectDirUri;
     if (element) {
-      rootDir = element.resourceUri!; // Use projectDirUri as fallback
+      rootDir = element.resourceUri!;
     }
     if (!rootDir || !rootDir.fsPath) {
       vscode.window.showErrorMessage("Invalid directory");
@@ -49,7 +56,6 @@ export default class PagesProvider
             command: "vscode.open",
             title: "",
             arguments: [vscode.Uri.file(filePath)],
-            tooltip: "Page",
           }
         );
         fileTreeItem.resourceUri = vscode.Uri.file(filePath);

@@ -14,6 +14,7 @@ export function activate(_: vscode.ExtensionContext) {
     vscode.window.showInformationMessage("No workspace folder open");
     return;
   }
+  const pagesTree = new PagesProvider(appDirUri);
 
   nextSearch.register(_, async () => {
     await nextSearch.showDirectoryContents(appDirUri);
@@ -25,7 +26,10 @@ export function activate(_: vscode.ExtensionContext) {
     await nextDelete.deletePageOrLayout(appDirUri);
   });
   vscode.window.createTreeView("projectExplorer.pages", {
-    treeDataProvider: new PagesProvider(appDirUri),
+    treeDataProvider: pagesTree,
+  });
+  vscode.commands.registerCommand("next-project-explorer.tree.refresh", () => {
+    pagesTree.refresh();
   });
 }
 

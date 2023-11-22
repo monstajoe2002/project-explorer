@@ -45,8 +45,25 @@
       {
         "command": "next-project-explorer.delete",
         "title": "Project Explorer: Delete Next.js File"
+      },
+      {
+        "command": "next-project-explorer.tree.refresh",
+        "icon": {
+          "light": "./src/assets/refresh-light.svg",
+          "dark": "./src/assets/refresh-dark.svg"
+        },
+        "title": "Refresh"
       }
-    ]
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "next-project-explorer.tree.refresh",
+          "when": "view == projectExplorer.pages || view == projectExplorer.layouts",
+          "group": "navigation"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "pnpm run compile",
