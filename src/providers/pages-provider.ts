@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
-import FileTreeItem from "../utils/file";
+import FileTreeItem from "../utils/file-tree-item";
 export default class PagesProvider
   implements vscode.TreeDataProvider<FileTreeItem>
 {
@@ -19,37 +19,50 @@ export default class PagesProvider
   getChildren(
     element?: FileTreeItem | undefined
   ): vscode.ProviderResult<FileTreeItem[]> {
-    const files = fs.readdirSync(this.projectDirUri.fsPath);
+    if (!this.projectDirUri) {
+      vscode.window.showInformationMessage("No file in empty workspace");
+      return [];
+    }
+    let rootDir: vscode.Uri = this.projectDirUri;
+    if (element) {
+      rootDir = element.resourceUri!; // Use projectDirUri as fallback
+    }
+    if (!rootDir || !rootDir.fsPath) {
+      vscode.window.showErrorMessage("Invalid directory");
+      return [];
+    }
 
-    const treeItems = files
-      // .filter((file) => file.includes("page"))
-      .map((file) => {
-        const filePath = path.join(this.projectDirUri.fsPath, file);
-        const fileStat = fs.statSync(filePath);
-        return new FileTreeItem(
-          file,
-          fileStat.isDirectory()
+    try {
+      const files = fs.readdirSync(rootDir.fsPath, { withFileTypes: true });
+      const fileTreeItems: FileTreeItem[] = [];
+      files.forEach((file) => {
+        let filePath = path.join(rootDir.fsPath, file.name);
+
+        const fileTreeItem = new FileTreeItem(
+          file.isFile() ? "/" : file.name,
+
+          file.isDirectory()
             ? vscode.TreeItemCollapsibleState.Collapsed
             : vscode.TreeItemCollapsibleState.None,
+
           {
             command: "vscode.open",
-            title: "Open File",
+            title: "",
             arguments: [vscode.Uri.file(filePath)],
+            tooltip: "Page",
           }
         );
+        fileTreeItem.resourceUri = vscode.Uri.file(filePath);
+        if (!file.isDirectory() && !file.name.includes("page")) {
+          return;
+        }
+        fileTreeItems.push(fileTreeItem);
       });
-    return treeItems;
-  }
-
-  getParent?(element: FileTreeItem): vscode.ProviderResult<FileTreeItem> {
-    throw new Error("Method not implemented.");
-  }
-
-  resolveTreeItem?(
-    item: vscode.TreeItem,
-    element: FileTreeItem,
-    token: vscode.CancellationToken
-  ): vscode.ProviderResult<vscode.TreeItem> {
-    throw new Error("Method not implemented.");
+      return fileTreeItems;
+    } catch (err) {
+      console.error("Error reading directory:", err);
+      vscode.window.showErrorMessage("Error reading directory");
+      return [];
+    }
   }
 }
