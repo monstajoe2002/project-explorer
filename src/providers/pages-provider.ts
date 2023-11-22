@@ -46,7 +46,7 @@ export default class PagesProvider
         let filePath = path.join(rootDir.fsPath, file.name);
 
         const fileTreeItem = new FileTreeItem(
-          file.isFile() ? "/" : file.name,
+          file.isFile() ? "/" : `/${file.name}`,
 
           file.isDirectory()
             ? vscode.TreeItemCollapsibleState.Collapsed
