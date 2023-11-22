@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from "vscode";
 import NextJsCommand from "./commands/nextjs-command";
+import PagesProvider from "./providers/pages-provider";
 
 const workspaceUri = vscode.workspace.workspaceFolders![0].uri;
 const appDirUri = vscode.Uri.joinPath(workspaceUri, "app");
@@ -22,6 +23,9 @@ export function activate(_: vscode.ExtensionContext) {
   });
   nextDelete.register(_, async () => {
     await nextDelete.deletePageOrLayout(appDirUri);
+  });
+  vscode.window.createTreeView("projectExplorer.pages", {
+    treeDataProvider: new PagesProvider(appDirUri),
   });
 }
 
