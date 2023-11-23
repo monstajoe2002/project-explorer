@@ -8,13 +8,12 @@ With the introduction of [Next.js 13](https://nextjs.org/), the `app` directory 
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+You can access the Project Explorer through the command palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac) by searching for `Project Explorer`. This allows you to search for, create and delete page and layout files.
 
-For example if there is an image subfolder under your extension project workspace:
+![Alt text](src\assets\features\command-palette.gif)
 
-\!\[feature X\]\(images/feature-x.png\)
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+You can also access the Project Explorer through the sidebar. This allows you to search for and delete page and layout files. However, you can also rename file paths through the sidebar.
+![Alt text](src\assets\features\treeview.gif)
 
 ## Requirements
 
@@ -22,7 +21,8 @@ This extension works in Next.js 13 projects with `app` directory enabled **only*
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+When you delete a file through the command palette, VS Code will through an error saying that the file is not found. *See screenshot below*. This is a known issue with VS Code and is not related to this extension.
+![Alt text](delete-error.png)
 
 ## Release Notes
 

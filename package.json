@@ -9,6 +9,10 @@
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/monstajoe2002/project-explorer.git"
+  },
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {

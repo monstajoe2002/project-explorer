@@ -34,8 +34,9 @@ export function activate(_: vscode.ExtensionContext) {
   vscode.window.createTreeView("projectExplorer.layouts", {
     treeDataProvider: layoutsTree,
   });
-  vscode.commands.registerCommand("next-project-explorer.tree.refresh", () => {
+  vscode.commands.registerCommand("project-explorer.tree.refresh", () => {
     pagesTree.refresh();
+    layoutsTree.refresh();
   });
   vscode.commands.registerCommand(
     "project-explorer.tree.delete",

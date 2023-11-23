@@ -10,7 +10,6 @@ export default class NextJsCommand implements Command {
     this.commandId = `project-explorer.${name}`;
   }
   async deletePageOrLayout(uri: vscode.Uri): Promise<void> {
-    // TODO: group option by folder level
     const items = await this._getQuickPickOptions(uri);
 
     const selectedItem = await vscode.window.showQuickPick(items, {
@@ -20,6 +19,7 @@ export default class NextJsCommand implements Command {
       return;
     }
     const selectedUri = vscode.Uri.joinPath(uri, selectedItem.fileName);
+    console.log(selectedUri);
     if (!selectedItem.isDirectory) {
       const option = await vscode.window.showWarningMessage(
         "Are you sure you want to delete this file?",
@@ -32,6 +32,7 @@ export default class NextJsCommand implements Command {
       await vscode.workspace.fs.delete(selectedUri, {
         useTrash: true,
       });
+      vscode.window.showInformationMessage(`Deleted ${selectedItem.fileName}`);
     }
 
     await this.deletePageOrLayout(selectedUri);
