@@ -53,6 +53,10 @@
           "dark": "./src/assets/refresh-dark.svg"
         },
         "title": "Refresh"
+      },
+      {
+        "command": "project-explorer.tree.delete",
+        "title": "Delete File"
       }
     ],
     "menus": {
@@ -61,6 +65,13 @@
           "command": "next-project-explorer.tree.refresh",
           "when": "view == projectExplorer.pages || view == projectExplorer.layouts",
           "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "project-explorer.tree.delete",
+          "when": "view == projectExplorer.pages || view == projectExplorer.layouts",
+          "group": "inline"
         }
       ]
     }

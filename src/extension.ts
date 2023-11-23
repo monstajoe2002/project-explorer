@@ -3,6 +3,7 @@
 import * as vscode from "vscode";
 import NextJsCommand from "./commands/nextjs-command";
 import PagesProvider from "./providers/pages-provider";
+import FileTreeItem from "./utils/file-tree-item";
 
 const workspaceUri = vscode.workspace.workspaceFolders![0].uri;
 const appDirUri = vscode.Uri.joinPath(workspaceUri, "app");
@@ -31,6 +32,12 @@ export function activate(_: vscode.ExtensionContext) {
   vscode.commands.registerCommand("next-project-explorer.tree.refresh", () => {
     pagesTree.refresh();
   });
+  vscode.commands.registerCommand(
+    "project-explorer.tree.delete",
+    (el: FileTreeItem) => {
+      pagesTree.deleteFile(el);
+    }
+  );
 }
 
 // This method is called when your extension is deactivated

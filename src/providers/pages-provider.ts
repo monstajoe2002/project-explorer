@@ -71,4 +71,13 @@ export default class PagesProvider
       return [];
     }
   }
+  async deleteFile(element: FileTreeItem) {
+    const fileToDelete = await this.getTreeItem(element);
+    if (!fileToDelete) {
+      vscode.window.showErrorMessage("Failed to delete");
+    }
+    await vscode.workspace.fs.delete(fileToDelete.resourceUri!, {
+      recursive: true,
+    });
+  }
 }
