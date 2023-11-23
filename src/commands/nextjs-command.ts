@@ -7,7 +7,7 @@ export default class NextJsCommand implements Command {
   readonly commandId: CommandId;
   constructor(name: CommandName) {
     this.name = name;
-    this.commandId = `next-project-explorer.${name}`;
+    this.commandId = `project-explorer.${name}`;
   }
   async deletePageOrLayout(uri: vscode.Uri): Promise<void> {
     // TODO: group option by folder level

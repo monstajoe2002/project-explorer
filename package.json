@@ -35,19 +35,19 @@
     },
     "commands": [
       {
-        "command": "next-project-explorer.search",
+        "command": "project-explorer.search",
         "title": "Project Explorer: Search Next.js Files"
       },
       {
-        "command": "next-project-explorer.create",
+        "command": "project-explorer.create",
         "title": "Project Explorer: New Next.js File"
       },
       {
-        "command": "next-project-explorer.delete",
+        "command": "project-explorer.delete",
         "title": "Project Explorer: Delete Next.js File"
       },
       {
-        "command": "next-project-explorer.tree.refresh",
+        "command": "project-explorer.tree.refresh",
         "icon": {
           "light": "./src/assets/refresh-light.svg",
           "dark": "./src/assets/refresh-dark.svg"
@@ -66,7 +66,7 @@
     "menus": {
       "view/title": [
         {
-          "command": "next-project-explorer.tree.refresh",
+          "command": "project-explorer.tree.refresh",
           "when": "view == projectExplorer.pages || view == projectExplorer.layouts",
           "group": "navigation"
         }
@@ -91,18 +91,19 @@
     "watch": "tsc -watch -p ./",
     "pretest": "pnpm run compile && pnpm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js"
+    "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.84.0",
     "@types/mocha": "^10.0.3",
     "@types/node": "18.x",
+    "@types/vscode": "^1.84.0",
     "@typescript-eslint/eslint-plugin": "^6.9.0",
     "@typescript-eslint/parser": "^6.9.0",
+    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-electron": "^2.3.6",
     "eslint": "^8.52.0",
     "glob": "^10.3.10",
     "mocha": "^10.2.0",
-    "typescript": "^5.2.2",
-    "@vscode/test-electron": "^2.3.6"
+    "typescript": "^5.2.2"
   }
 }
