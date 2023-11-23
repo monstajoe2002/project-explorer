@@ -53,8 +53,8 @@
       {
         "command": "project-explorer.tree.refresh",
         "icon": {
-          "light": "./src/assets/refresh-light.svg",
-          "dark": "./src/assets/refresh-dark.svg"
+          "light": "./src/assets/light/refresh.svg",
+          "dark": "./src/assets/dark/refresh.svg"
         },
         "title": "Refresh"
       },
