@@ -17,7 +17,7 @@ You can also access the Project Explorer through the sidebar. This allows you to
 
 ## Requirements
 
-This extension works in Next.js 13 projects with `app` directory enabled **only**.
+This extension works in Next.js 13+ projects with `app` directory enabled **only**.
 
 ## Known Issues
 
