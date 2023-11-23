@@ -66,7 +66,6 @@ export default class PagesProvider
       });
       return fileTreeItems;
     } catch (err) {
-      console.error("Error reading directory:", err);
       vscode.window.showErrorMessage("Error reading directory");
       return [];
     }
@@ -79,5 +78,20 @@ export default class PagesProvider
     await vscode.workspace.fs.delete(fileToDelete.resourceUri!, {
       recursive: true,
     });
+  }
+  async renameFile(appDirUri: vscode.Uri, element: FileTreeItem) {
+    const fileToRename = await this.getTreeItem(element);
+    if (!fileToRename) {
+      vscode.window.showErrorMessage("Failed to rename");
+    }
+    const newPath = await vscode.window.showInputBox();
+    if (!newPath) {
+      return;
+    }
+    const newPathUri = vscode.Uri.parse(newPath);
+    await vscode.workspace.fs.rename(
+      fileToRename.resourceUri!,
+      vscode.Uri.joinPath(appDirUri, newPathUri.fsPath)
+    );
   }
 }

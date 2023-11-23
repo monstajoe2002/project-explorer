@@ -38,6 +38,12 @@ export function activate(_: vscode.ExtensionContext) {
       pagesTree.deleteFile(el);
     }
   );
+  vscode.commands.registerCommand(
+    "project-explorer.tree.rename",
+    (el: FileTreeItem) => {
+      pagesTree.renameFile(appDirUri, el);
+    }
+  );
 }
 
 // This method is called when your extension is deactivated

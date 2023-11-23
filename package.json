@@ -56,7 +56,11 @@
       },
       {
         "command": "project-explorer.tree.delete",
-        "title": "Delete File"
+        "title": "Delete"
+      },
+      {
+        "command": "project-explorer.tree.rename",
+        "title": "Rename"
       }
     ],
     "menus": {
@@ -70,6 +74,11 @@
       "view/item/context": [
         {
           "command": "project-explorer.tree.delete",
+          "when": "view == projectExplorer.pages || view == projectExplorer.layouts",
+          "group": "inline"
+        },
+        {
+          "command": "project-explorer.tree.rename",
           "when": "view == projectExplorer.pages || view == projectExplorer.layouts",
           "group": "inline"
         }
