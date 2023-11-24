@@ -10,10 +10,10 @@ With the introduction of [Next.js 13](https://nextjs.org/), the `app` directory 
 
 You can access the Project Explorer through the command palette (`Ctrl+Shift+P` or `Cmd+Shift+P` on Mac) by searching for `Project Explorer`. This allows you to search for, create and delete page and layout files.
 
-![Alt text](assets\features\command-palette.gif)
+![Command Palette Feature](assets/features/command-palette.gif)
 
 You can also access the Project Explorer through the sidebar. This allows you to search for and delete page and layout files. However, you can also rename file paths through the sidebar.
-![Alt text](assets\features\treeview.gif)
+![Project Tree View](assets/features/treeview.gif)
 
 ## Requirements
 
