@@ -23,7 +23,7 @@
         {
           "id": "project-explorer",
           "title": "Project Explorer",
-          "icon": "./assets/project-explorer-treeview.svg"
+          "icon": "resources/project-explorer-treeview.svg"
         }
       ]
     },
@@ -54,19 +54,18 @@
       },
       {
         "command": "project-explorer.tree.refresh",
-        "icon": {
-          "light": "./assets/light/refresh.svg",
-          "dark": "./assets/dark/refresh.svg"
-        },
+        "icon": "$(refresh)",
         "title": "Refresh"
       },
       {
         "command": "project-explorer.tree.delete",
-        "title": "Delete"
+        "title": "Delete",
+        "icon": "$(remove)"
       },
       {
         "command": "project-explorer.tree.rename",
-        "title": "Rename"
+        "title": "Rename",
+        "icon": "$(pencil)"
       }
     ],
     "menus": {
