@@ -2,6 +2,7 @@
   "name": "project-explorer",
   "displayName": "Project Explorer",
   "description": "An extension for searching and creating page and layout files in a Next.js application project.",
+  "publisher": "monstajoedev",
   "version": "0.1.0",
   "engines": {
     "vscode": "^1.84.0"
