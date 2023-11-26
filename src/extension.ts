@@ -7,8 +7,8 @@ import FileTreeItem from "./utils/file-tree-item";
 import LayoutsProvider from "./providers/layouts-provider";
 
 const workspaceUri = vscode.workspace.workspaceFolders![0].uri;
-const appDirUri = vscode.Uri.joinPath(workspaceUri, "app");
-export function activate(_: vscode.ExtensionContext) {
+let appDirUri: vscode.Uri;
+export async function activate(_: vscode.ExtensionContext) {
   const nextSearch = new NextJsCommand("search");
   const nextCreate = new NextJsCommand("create");
   const nextDelete = new NextJsCommand("delete");
@@ -16,6 +16,13 @@ export function activate(_: vscode.ExtensionContext) {
     vscode.window.showInformationMessage("No workspace folder open");
     return;
   }
+  const workspaceRootContent = await vscode.workspace.fs.readDirectory(
+    workspaceUri
+  );
+  if (workspaceRootContent.find(([name]) => name === "src") === undefined) {
+    appDirUri = vscode.Uri.joinPath(workspaceUri, "app");
+  }
+  appDirUri = vscode.Uri.joinPath(workspaceUri, "src", "app");
   const pagesTree = new PagesProvider(appDirUri);
   const layoutsTree = new LayoutsProvider(appDirUri);
 

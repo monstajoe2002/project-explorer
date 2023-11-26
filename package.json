@@ -96,7 +96,8 @@
     "watch": "tsc -watch -p ./",
     "pretest": "pnpm run compile && pnpm run lint",
     "lint": "eslint src --ext ts",
-    "test": "vscode-test"
+    "test": "vscode-test",
+    "deploy": "vsce publish patch"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.3",
