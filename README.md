@@ -23,9 +23,3 @@ This extension works in Next.js 13+ projects with `app` directory enabled **only
 
 When you delete a file through the command palette, VS Code will through an error saying that the file is not found. *See screenshot below*. This is a known issue with VS Code and is not related to this extension.
 ![Alt text](delete-error.png)
-
-## Release Notes
-
-### 0.1.0
-
-Initial release of Project Explorer
