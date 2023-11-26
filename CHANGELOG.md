@@ -1,6 +1,6 @@
 # Change Log
 
-All notable changes to the "project-explorer" extension will be documented in this file.
+All notable changes to **Project Explorer** will be documented in this file.
 
 ## [0.1.1] - 2023-11-24
 
