@@ -77,6 +77,7 @@ export default class LayoutsProvider
     }
     await vscode.workspace.fs.delete(fileToDelete.resourceUri!, {
       recursive: true,
+      useTrash: true,
     });
   }
   async renameFile(appDirUri: vscode.Uri, element: FileTreeItem) {
