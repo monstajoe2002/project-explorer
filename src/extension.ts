@@ -5,6 +5,7 @@ import NextJsCommand from "./commands/nextjs-command";
 import PagesProvider from "./providers/pages-provider";
 import FileTreeItem from "./utils/file-tree-item";
 import LayoutsProvider from "./providers/layouts-provider";
+import path from "path";
 
 const workspaceUri = vscode.workspace.workspaceFolders![0].uri;
 let appDirUri: vscode.Uri;
@@ -19,10 +20,15 @@ export async function activate(_: vscode.ExtensionContext) {
   const workspaceRootContent = await vscode.workspace.fs.readDirectory(
     workspaceUri
   );
-  if (workspaceRootContent.find(([name]) => name === "src") === undefined) {
+
+  const srcFolderExists = workspaceRootContent.some(([name]) => name === "src");
+
+  if (srcFolderExists) {
+    appDirUri = vscode.Uri.joinPath(workspaceUri, "src", "app");
+  } else {
     appDirUri = vscode.Uri.joinPath(workspaceUri, "app");
   }
-  appDirUri = vscode.Uri.joinPath(workspaceUri, "src", "app");
+
   const pagesTree = new PagesProvider(appDirUri);
   const layoutsTree = new LayoutsProvider(appDirUri);
 

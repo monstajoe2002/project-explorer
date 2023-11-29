@@ -79,6 +79,7 @@ export default class LayoutsProvider
       recursive: true,
       useTrash: true,
     });
+    this.refresh();
   }
   async renameFile(appDirUri: vscode.Uri, element: FileTreeItem) {
     const fileToRename = await this.getTreeItem(element);
@@ -94,5 +95,6 @@ export default class LayoutsProvider
       fileToRename.resourceUri!,
       vscode.Uri.joinPath(appDirUri, newPathUri.fsPath)
     );
+    this.refresh();
   }
 }
