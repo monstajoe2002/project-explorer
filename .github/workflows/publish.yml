@@ -18,7 +18,8 @@ jobs:
             git config --global user.name "monstajoe2002"
         - name: Merge to master
           run: |
-            git fetch origin master
+            git fetch
+            git pull
             git checkout master
             git merge --no-ff release/patch
             git push origin master
