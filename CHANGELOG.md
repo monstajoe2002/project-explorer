@@ -2,6 +2,12 @@
 
 All notable changes to **Project Explorer** will be documented in this file.
 
+## [0.1.4] - 2023-12-02
+
+### Fixed
+
+- Replace minus sign with ttrash in the tree view
+
 ## [0.1.3] - 2023-11-29
 
 ### Fixed
