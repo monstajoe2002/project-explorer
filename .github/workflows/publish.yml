@@ -21,7 +21,7 @@ jobs:
             git fetch
             git pull
             git checkout master
-            git merge --no-ff release/patch
+            git merge --allow-unrelated-histories --no-ff release/patch
             git push origin master
   build:
     strategy:
