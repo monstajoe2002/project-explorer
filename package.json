@@ -60,7 +60,7 @@
       {
         "command": "project-explorer.tree.delete",
         "title": "Delete",
-        "icon": "$(remove)"
+        "icon": "$(trash)"
       },
       {
         "command": "project-explorer.tree.rename",
