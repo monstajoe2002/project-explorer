@@ -2,11 +2,15 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 import FileTreeItem from "../utils/file-tree-item";
+import { Provider } from "./base-provider";
 export default class LayoutsProvider
+  extends Provider
   implements vscode.TreeDataProvider<FileTreeItem>
 {
-  constructor(private projectDirUri: vscode.Uri) {}
-  private _onDidChangeTreeData: vscode.EventEmitter<
+  constructor(protected _projectDirUri: vscode.Uri) {
+    super(_projectDirUri);
+  }
+  protected readonly _onDidChangeTreeData: vscode.EventEmitter<
     void | FileTreeItem | FileTreeItem[] | null | undefined
   > = new vscode.EventEmitter<
     void | FileTreeItem | FileTreeItem[] | null | undefined
@@ -26,11 +30,11 @@ export default class LayoutsProvider
   getChildren(
     element?: FileTreeItem | undefined
   ): vscode.ProviderResult<FileTreeItem[]> {
-    if (!this.projectDirUri) {
+    if (!this._projectDirUri) {
       vscode.window.showInformationMessage("No file in empty workspace");
       return [];
     }
-    let rootDir: vscode.Uri = this.projectDirUri;
+    let rootDir: vscode.Uri = this._projectDirUri;
     if (element) {
       rootDir = element.resourceUri!;
     }
