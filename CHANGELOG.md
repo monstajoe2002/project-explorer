@@ -2,11 +2,17 @@
 
 All notable changes to **Project Explorer** will be documented in this file.
 
+## [0.1.5] - 2023-12-12
+
+### Added
+
+- View open (active) tabs in the tree view
+
 ## [0.1.4] - 2023-12-02
 
 ### Fixed
 
-- Replace minus sign with ttrash in the tree view
+- Replace minus sign with trash in the tree view
 
 ## [0.1.3] - 2023-11-29
 

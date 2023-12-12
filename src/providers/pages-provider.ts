@@ -2,11 +2,15 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 import FileTreeItem from "../utils/file-tree-item";
+import { Provider } from "../utils/base-provider";
 export default class PagesProvider
+  extends Provider<FileTreeItem>
   implements vscode.TreeDataProvider<FileTreeItem>
 {
-  constructor(private projectDirUri: vscode.Uri) {}
-  private _onDidChangeTreeData: vscode.EventEmitter<
+  constructor(protected projectDirUri: vscode.Uri) {
+    super(projectDirUri);
+  }
+  protected readonly _onDidChangeTreeData: vscode.EventEmitter<
     void | FileTreeItem | FileTreeItem[] | null | undefined
   > = new vscode.EventEmitter<
     void | FileTreeItem | FileTreeItem[] | null | undefined

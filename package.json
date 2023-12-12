@@ -36,6 +36,10 @@
         {
           "id": "projectExplorer.layouts",
           "name": "Layouts"
+        },
+        {
+          "id": "projectExplorer.activeEditors",
+          "name": "Active Editors"
         }
       ]
     },
@@ -72,7 +76,7 @@
       "view/title": [
         {
           "command": "project-explorer.tree.refresh",
-          "when": "view == projectExplorer.pages || view == projectExplorer.layouts",
+          "when": "view == projectExplorer.pages || view == projectExplorer.layouts || view == projectExplorer.activeEditors",
           "group": "navigation"
         }
       ],
