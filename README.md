@@ -1,5 +1,7 @@
 # Project Explorer README
 
+<a href="https://www.producthunt.com/posts/project-explorer?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-project&#0045;explorer" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=427756&theme=neutral" alt="Project&#0032;Explorer - Organize&#0032;and&#0032;view&#0032;your&#0032;Next&#0046;js&#0032;project&#0032;in&#0032;an&#0032;intuitive&#0032;way&#0032; | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+
 A convenient extension for searching and creating page and layout files in a Next.js application project.
 
 ## Motivation
@@ -21,5 +23,7 @@ This extension works in Next.js 13+ projects with `app` directory enabled **only
 
 ## Known Issues
 
-When you delete a file through the command palette, VS Code will through an error saying that the file is not found. *See screenshot below*. This is a known issue with VS Code and is not related to this extension.
+- When you delete a file through the command palette, VS Code will through an error saying that the file is not found. *See screenshot below*. This is a known issue with VS Code and is not related to this extension.
 ![Alt text](delete-error.png)
+
+- In the Active Editors section, all tabs may not show there. This only occurs after launching Visual Studio Code to open tabs.
