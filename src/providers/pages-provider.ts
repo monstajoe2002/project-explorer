@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import * as fs from "fs";
 import * as path from "path";
 import FileTreeItem from "../utils/file-tree-item";
-import { Provider } from "./base-provider";
+import { Provider } from "../utils/base-provider";
 export default class PagesProvider
   extends Provider
   implements vscode.TreeDataProvider<FileTreeItem>

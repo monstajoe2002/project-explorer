@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import FileTreeItem from "../utils/file-tree-item";
+import FileTreeItem from "./file-tree-item";
 export abstract class Provider {
   constructor(protected _projectDirUri: vscode.Uri) {}
   protected readonly _onDidChangeTreeData: vscode.EventEmitter<
