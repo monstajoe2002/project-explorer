@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
 import FileTreeItem from "../utils/file-tree-item";
 import { Provider } from "../utils/base-provider";
+import ActiveEditorsTreeItem from "../utils/active-editors-tree-item";
 class ActiveEditorsProvider
-  extends Provider
+  extends Provider<ActiveEditorsTreeItem>
   implements vscode.TreeDataProvider<FileTreeItem>
 {
   getChildren(

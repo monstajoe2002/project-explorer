@@ -4,7 +4,7 @@ import * as path from "path";
 import FileTreeItem from "../utils/file-tree-item";
 import { Provider } from "../utils/base-provider";
 export default class PagesProvider
-  extends Provider
+  extends Provider<FileTreeItem>
   implements vscode.TreeDataProvider<FileTreeItem>
 {
   constructor(protected projectDirUri: vscode.Uri) {
