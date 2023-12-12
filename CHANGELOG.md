@@ -2,7 +2,7 @@
 
 All notable changes to **Project Explorer** will be documented in this file.
 
-## [0.1.5] - 2023-12-12
+## [0.2.0] - 2023-12-12
 
 ### Added
 
