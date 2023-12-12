@@ -33,18 +33,23 @@ export default class ActiveEditorsProvider
   getChildren(
     element?: ActiveEditorsTreeItem | undefined
   ): vscode.ProviderResult<ActiveEditorsTreeItem[]> {
-    try {
-      const activeEditors = vscode.window.visibleTextEditors;
-      this.refresh();
-      return activeEditors.map((editor) => {
-        return new ActiveEditorsTreeItem(
-          editor.document!.fileName,
-          vscode.TreeItemCollapsibleState.None
-        );
-      });
-    } catch (err) {
-      return [];
-    }
+    const openDocuments = vscode.workspace.textDocuments;
+    const activeEditors: ActiveEditorsTreeItem[] = [];
+    this.refresh();
+    openDocuments.forEach((editor) => {
+      if (editor.fileName.endsWith(".git")) {
+        return null;
+      }
+      const activeEditor = new ActiveEditorsTreeItem(
+        "\\" +
+          editor.fileName.substring(
+            editor.fileName.indexOf("app\\") + "app\\".length
+          ),
+        vscode.TreeItemCollapsibleState.None
+      );
+      activeEditors.push(activeEditor);
+    });
+    return activeEditors;
   }
   closeEditor(element: ActiveEditorsTreeItem) {
     vscode.window.visibleTextEditors.map((editor) => {
