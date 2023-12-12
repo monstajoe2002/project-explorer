@@ -45,7 +45,12 @@ export default class ActiveEditorsProvider
           editor.fileName.substring(
             editor.fileName.indexOf("app\\") + "app\\".length
           ),
-        vscode.TreeItemCollapsibleState.None
+        vscode.TreeItemCollapsibleState.None,
+        {
+          command: "vscode.open",
+          title: "",
+          arguments: [editor.uri],
+        }
       );
       activeEditors.push(activeEditor);
     });
