@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { Provider } from "../utils/base-provider";
 import ActiveEditorsTreeItem from "../utils/active-editors-tree-item";
-class ActiveEditorsProvider
+export default class ActiveEditorsProvider
   extends Provider<ActiveEditorsTreeItem>
   implements vscode.TreeDataProvider<ActiveEditorsTreeItem>
 {
@@ -33,19 +33,18 @@ class ActiveEditorsProvider
   getChildren(
     element?: ActiveEditorsTreeItem | undefined
   ): vscode.ProviderResult<ActiveEditorsTreeItem[]> {
-    if (!element) {
-      return null;
+    try {
+      const activeEditors = vscode.window.visibleTextEditors;
+      this.refresh();
+      return activeEditors.map((editor) => {
+        return new ActiveEditorsTreeItem(
+          editor.document!.fileName,
+          vscode.TreeItemCollapsibleState.None
+        );
+      });
+    } catch (err) {
+      return [];
     }
-
-    vscode.window.visibleTextEditors.map((editor) => {
-      const activeEditor = new ActiveEditorsTreeItem(
-        editor.document.fileName,
-        vscode.TreeItemCollapsibleState.None
-      );
-      return editor.document.fileName.includes("page" || "layout")
-        ? activeEditor
-        : null;
-    });
   }
   closeEditor(element: ActiveEditorsTreeItem) {
     vscode.window.visibleTextEditors.map((editor) => {

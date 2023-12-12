@@ -6,6 +6,7 @@ import PagesProvider from "./providers/pages-provider";
 import FileTreeItem from "./utils/file-tree-item";
 import LayoutsProvider from "./providers/layouts-provider";
 import path from "path";
+import ActiveEditorsProvider from "./providers/active-editors-provider";
 
 const workspaceUri = vscode.workspace.workspaceFolders![0].uri;
 let appDirUri: vscode.Uri;
@@ -31,7 +32,7 @@ export async function activate(_: vscode.ExtensionContext) {
 
   const pagesTree = new PagesProvider(appDirUri);
   const layoutsTree = new LayoutsProvider(appDirUri);
-
+  const activeEditorsTree = new ActiveEditorsProvider(appDirUri);
   nextSearch.register(_, async () => {
     await nextSearch.showDirectoryContents(appDirUri);
   });
@@ -47,9 +48,13 @@ export async function activate(_: vscode.ExtensionContext) {
   vscode.window.createTreeView("projectExplorer.layouts", {
     treeDataProvider: layoutsTree,
   });
+  vscode.window.createTreeView("projectExplorer.activeEditors", {
+    treeDataProvider: activeEditorsTree,
+  });
   vscode.commands.registerCommand("project-explorer.tree.refresh", () => {
     pagesTree.refresh();
     layoutsTree.refresh();
+    activeEditorsTree.refresh();
   });
   vscode.commands.registerCommand(
     "project-explorer.tree.delete",
