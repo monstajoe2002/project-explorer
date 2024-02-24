@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { Provider } from "../utils/base-provider";
 import ActiveEditorsTreeItem from "../utils/active-editors-tree-item";
+import { P, match } from "ts-pattern";
 export default class ActiveEditorsProvider
   extends Provider<ActiveEditorsTreeItem>
   implements vscode.TreeDataProvider<ActiveEditorsTreeItem>
@@ -35,11 +36,7 @@ export default class ActiveEditorsProvider
   ): vscode.ProviderResult<ActiveEditorsTreeItem[]> {
     const openDocuments = vscode.workspace.textDocuments;
     const activeEditors: ActiveEditorsTreeItem[] = [];
-    this.refresh();
     openDocuments.forEach((editor) => {
-      if (editor.fileName.endsWith(".git")) {
-        return null;
-      }
       const activeEditor = new ActiveEditorsTreeItem(
         "\\" +
           editor.fileName.substring(
@@ -52,8 +49,18 @@ export default class ActiveEditorsProvider
           arguments: [editor.uri],
         }
       );
-      activeEditors.push(activeEditor);
+      match(editor.fileName)
+        .with(P.string.includes("page"), () => {
+          activeEditors.push(activeEditor);
+        })
+        .with(P.string.includes("layout"), () => {
+          activeEditors.push(activeEditor);
+        })
+        // refuses to exclude '.git' files from tree view despite being in the matching pattern
+        // .with(P.string.endsWith(".git"), () => null)
+        .otherwise(() => null);
     });
+    this.refresh();
     return activeEditors;
   }
   closeEditor(element: ActiveEditorsTreeItem) {
