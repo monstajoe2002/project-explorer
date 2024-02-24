@@ -2,6 +2,12 @@
 
 All notable changes to **Project Explorer** will be documented in this file.
 
+## [0.2.1] 2024-2-24
+
+### Fixed
+
+- Exclude components from active editors tree view
+
 ## [0.2.0] - 2023-12-12
 
 ### Added
