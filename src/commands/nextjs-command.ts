@@ -39,27 +39,59 @@ export default class NextJsCommand implements Command {
   }
 
   async createPageOrLayout(uri: vscode.Uri): Promise<void> {
-    const input = await vscode.window.showInputBox({
-      prompt: "Enter the name of the page or layout relative to 'app/'",
+    const pageOrLayout = await vscode.window.showQuickPick(["Page", "Layout"], {
+      placeHolder: "Choose page or layout",
     });
+
+    if (!pageOrLayout) {
+      vscode.window.showErrorMessage("No page or layout selected");
+      return;
+    }
+
+    const isPage = pageOrLayout === "Page";
+
+    const input = await vscode.window.showInputBox({
+      prompt: `Enter the name of the ${
+        isPage ? "page" : "layout"
+      } relative to 'app/' without extension`,
+      value: pageOrLayout === "Page" ? "page.tsx" : "layout.tsx",
+    });
+
     if (!input) {
       vscode.window.showErrorMessage("No file name provided");
+      return;
     }
-    const pathToFileUri = vscode.Uri.joinPath(uri, input!);
+
+    const pathToFileUri = vscode.Uri.joinPath(uri, input);
     const pathToFile = pathToFileUri.fsPath;
-    const fileName = pathToFile.split("\\").at(-1)!.slice(0, -4);
+    const fileName = pathToFile.split("\\").at(-2);
+
     await vscode.workspace.fs.writeFile(
       pathToFileUri,
       new Uint8Array(
         Buffer.from(`
-      export default function ${fileName}() {
-        return <div>${fileName}</div>
-      }
-      `)
+    ${
+      isPage
+        ? `
+    export default function ${
+      fileName![0].toUpperCase() + fileName!.slice(1) + pageOrLayout
+    }() {
+      return <div>${fileName} page</div>
+    }`
+        : `
+    export default function ${
+      fileName![0].toUpperCase() + fileName!.slice(1) + pageOrLayout
+    }({ children }) {
+      return <div>{children}</div>
+    }`
+    }
+    `)
       )
     );
+
     await this._openFile(pathToFileUri);
   }
+
   isValidNextFile = (fileName: string) =>
     fileName.endsWith(".tsx") || fileName.endsWith(".jsx");
 
