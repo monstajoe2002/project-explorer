@@ -2,6 +2,12 @@
 
 All notable changes to **Project Explorer** will be documented in this file.
 
+## [0.3.0] 2024-3-1
+
+### Added
+
+- Display a quick pick menu to create either a page or a layout
+
 ## [0.2.1] 2024-2-24
 
 ### Fixed
