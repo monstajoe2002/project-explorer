@@ -56,11 +56,13 @@ export default class LayoutsProvider
             ? vscode.TreeItemCollapsibleState.Collapsed
             : vscode.TreeItemCollapsibleState.None,
 
-          {
-            command: "vscode.open",
-            title: "",
-            arguments: [vscode.Uri.file(filePath)],
-          }
+          file.isDirectory()
+            ? undefined
+            : {
+                command: "vscode.open",
+                title: "",
+                arguments: [vscode.Uri.file(filePath)],
+              }
         );
         fileTreeItem.resourceUri = vscode.Uri.file(filePath);
         if (!file.isDirectory() && !file.name.includes("layout")) {

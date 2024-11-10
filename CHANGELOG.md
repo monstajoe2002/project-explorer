@@ -2,6 +2,12 @@
 
 All notable changes to **Project Explorer** will be documented in this file.
 
+## [0.3.1] 2024-11-10
+
+### Fixed
+
+- Prevent folders in the pages and layouts tree views from being opened as files when clicked. This ensures only valid files are opened, improving user experience.
+
 ## [0.3.0] 2024-3-1
 
 ### Added
